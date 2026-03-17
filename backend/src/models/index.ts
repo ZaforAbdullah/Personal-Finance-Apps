@@ -14,12 +14,8 @@ export const sequelize = new Sequelize({
   password: config.database.password,
   models: [Transaction, Budget, Pot, RecurringBill],
   logging: config.nodeEnv === 'development' ? console.log : false,
-  pool: {
-    max: 10,
-    min: 0,
-    acquire: 30000,
-    idle: 10000,
-  },
+  pool: { max: 10, min: 0, acquire: 30000, idle: 10000 },
+  dialectOptions: { ssl: { require: true, rejectUnauthorized: false } },
 });
 
 export { Transaction, Budget, Pot, RecurringBill };
