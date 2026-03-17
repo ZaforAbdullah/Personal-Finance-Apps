@@ -2,7 +2,7 @@
 
 A full-stack personal finance tracker built with Next.js, Fastify, GraphQL, and PostgreSQL. Covers budgets, savings pots, transactions, and recurring bills — all in one place.
 
-**Live demo**: [your-app.vercel.app](https://your-app.vercel.app) <!-- replace with your Vercel URL -->
+**[Live Demo →](https://personal-finance-apps.vercel.app/)**
 
 ---
 
