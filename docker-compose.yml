@@ -1,0 +1,126 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: finance_postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME:-finance_db}
+      POSTGRES_USER: ${DB_USER:-finance_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-finance_pass}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-finance_user} -d ${DB_NAME:-finance_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - finance_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: builder
+    container_name: finance_backend
+    command: npm run dev
+    environment:
+      NODE_ENV: development
+      PORT: ${BACKEND_PORT:-4000}
+      HOST: 0.0.0.0
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-finance_db}
+      DB_USER: ${DB_USER:-finance_user}
+      DB_PASSWORD: ${DB_PASSWORD:-finance_pass}
+      CORS_ORIGIN: ${FRONTEND_URL:-http://localhost:3000}
+    ports:
+      - "${BACKEND_PORT:-4000}:4000"
+    volumes:
+      - ./backend/src:/app/src
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - finance_network
+    restart: unless-stopped
+
+  backend-migrate:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: builder
+    container_name: finance_migrate
+    command: npm run db:migrate
+    environment:
+      NODE_ENV: development
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-finance_db}
+      DB_USER: ${DB_USER:-finance_user}
+      DB_PASSWORD: ${DB_PASSWORD:-finance_pass}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - finance_network
+    profiles:
+      - migrate
+
+  backend-seed:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: builder
+    container_name: finance_seed
+    command: npm run db:seed
+    environment:
+      NODE_ENV: development
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-finance_db}
+      DB_USER: ${DB_USER:-finance_user}
+      DB_PASSWORD: ${DB_PASSWORD:-finance_pass}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - finance_network
+    profiles:
+      - seed
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: deps
+    container_name: finance_frontend
+    command: npm run dev
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_GRAPHQL_URL: ${NEXT_PUBLIC_GRAPHQL_URL:-http://localhost:4000/graphql}
+      PORT: 3000
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/next.config.js:/app/next.config.js
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+    networks:
+      - finance_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  finance_network:
+    driver: bridge
