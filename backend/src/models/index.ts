@@ -15,7 +15,9 @@ export const sequelize = new Sequelize({
   models: [Transaction, Budget, Pot, RecurringBill],
   logging: config.nodeEnv === 'development' ? console.log : false,
   pool: { max: 10, min: 0, acquire: 30000, idle: 10000 },
-  dialectOptions: { ssl: { require: true, rejectUnauthorized: false } },
+  dialectOptions: config.database.host === 'localhost' || config.database.host === 'postgres'
+    ? {}
+    : { ssl: { require: true, rejectUnauthorized: false } },
 });
 
 export { Transaction, Budget, Pot, RecurringBill };

@@ -123,7 +123,7 @@ export default function BudgetsPage() {
           {budgets.length === 0 && (
             <div className="finance-card" style={{ textAlign: 'center', padding: '3rem', color: '#98908B' }}>
               <i className="pi pi-chart-pie" style={{ fontSize: '3rem', marginBottom: '1rem', display: 'block' }} />
-              <p>No budgets yet. Click "Add New Budget" to get started.</p>
+              <p>No budgets yet. Click &ldquo;Add New Budget&rdquo; to get started.</p>
             </div>
           )}
         </div>

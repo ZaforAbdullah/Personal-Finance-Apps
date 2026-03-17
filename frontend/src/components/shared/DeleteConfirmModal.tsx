@@ -31,7 +31,7 @@ export default function DeleteConfirmModal({ visible, onHide, onConfirm, itemTyp
           <i className="pi pi-trash" style={{ fontSize: '1.375rem', color: 'var(--red)' }} />
         </div>
         <p style={{ color: 'var(--grey-500)', fontSize: '0.875rem', lineHeight: 1.7 }}>
-          Are you sure you want to delete <strong style={{ color: 'var(--grey-900)' }}>"{itemName}"</strong>?
+          Are you sure you want to delete <strong style={{ color: 'var(--grey-900)' }}>&ldquo;{itemName}&rdquo;</strong>?
           <br />This action cannot be undone.
         </p>
       </div>

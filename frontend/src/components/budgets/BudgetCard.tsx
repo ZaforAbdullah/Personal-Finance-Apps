@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import Link from 'next/link';
 import { Budget, Transaction } from '@/types';
 import { formatCurrencyAbs, formatDate } from '@/lib/formatters';
 import { Menu } from 'primereact/menu';
@@ -56,9 +57,9 @@ export default function BudgetCard({ budget, onEdit, onDelete }: BudgetCardProps
       <div style={{ background: '#F8F4F0', borderRadius: 12, padding: '1rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
           <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>Latest Spending</span>
-          <a href="/transactions" style={{ fontSize: '0.75rem', color: '#696868', display: 'flex', alignItems: 'center', gap: '0.25rem', textDecoration: 'none' }}>
+          <Link href="/transactions" style={{ fontSize: '0.75rem', color: '#696868', display: 'flex', alignItems: 'center', gap: '0.25rem', textDecoration: 'none' }}>
             See All <i className="pi pi-arrow-right" style={{ fontSize: '0.625rem' }} />
-          </a>
+          </Link>
         </div>
         {latestTxns.length === 0 ? (
           <p style={{ fontSize: '0.875rem', color: '#98908B', textAlign: 'center' }}>No transactions this month</p>

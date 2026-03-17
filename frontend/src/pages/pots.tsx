@@ -92,7 +92,7 @@ export default function PotsPage() {
         {pots.length === 0 && (
           <div className="finance-card" style={{ textAlign: 'center', padding: '3rem', color: '#98908B', gridColumn: '1 / -1' }}>
             <i className="pi pi-wallet" style={{ fontSize: '3rem', marginBottom: '1rem', display: 'block' }} />
-            <p>No pots yet. Click "Add New Pot" to start saving!</p>
+            <p>No pots yet. Click &ldquo;Add New Pot&rdquo; to start saving!</p>
           </div>
         )}
       </div>
